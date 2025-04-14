@@ -1,0 +1,61 @@
+[
+    [
+        { "x": 338, "y": 112, "id": 0, "art": false },
+        { "x": 439, "y": 185, "id": 1, "art": false },
+        { "x": 398, "y": 311, "id": 2, "art": false },
+        { "x": 278, "y": 314, "id": 3, "art": false },
+        { "x": 232, "y": 191, "id": 4, "art": false }
+    ],
+    [
+        {
+            "n1": { "x": 338, "y": 112, "id": 0, "art": false },
+            "n2": { "x": 232, "y": 191, "id": 4, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 439, "y": 185, "id": 1, "art": false },
+            "n2": { "x": 338, "y": 112, "id": 0, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 398, "y": 311, "id": 2, "art": false },
+            "n2": { "x": 439, "y": 185, "id": 1, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 278, "y": 314, "id": 3, "art": false },
+            "n2": { "x": 398, "y": 311, "id": 2, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 232, "y": 191, "id": 4, "art": false },
+            "n2": { "x": 278, "y": 314, "id": 3, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 439, "y": 185, "id": 1, "art": false },
+            "n2": { "x": 232, "y": 191, "id": 4, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 278, "y": 314, "id": 3, "art": false },
+            "n2": { "x": 439, "y": 185, "id": 1, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 338, "y": 112, "id": 0, "art": false },
+            "n2": { "x": 278, "y": 314, "id": 3, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 398, "y": 311, "id": 2, "art": false },
+            "n2": { "x": 338, "y": 112, "id": 0, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 232, "y": 191, "id": 4, "art": false },
+            "n2": { "x": 398, "y": 311, "id": 2, "art": false },
+            "bridge": false
+        }
+    ]
+]

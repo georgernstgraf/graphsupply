@@ -1,0 +1,178 @@
+[
+    [
+        { "x": 115, "y": 90, "id": 0, "art": false },
+        { "x": 218, "y": 88, "id": 1, "art": false },
+        { "x": 324, "y": 89, "id": 2, "art": false },
+        { "x": 443, "y": 86, "id": 3, "art": false },
+        { "x": 49, "y": 175, "id": 4, "art": false },
+        { "x": 155, "y": 176, "id": 5, "art": false },
+        { "x": 262, "y": 178, "id": 6, "art": false },
+        { "x": 384, "y": 175, "id": 7, "art": false },
+        { "x": 109, "y": 290, "id": 8, "art": false },
+        { "x": 197, "y": 289, "id": 9, "art": false },
+        { "x": 302, "y": 285, "id": 10, "art": false },
+        { "x": 375, "y": 285, "id": 11, "art": false },
+        { "x": 496, "y": 272, "id": 12, "art": false },
+        { "x": 161, "y": 395, "id": 13, "art": false },
+        { "x": 263, "y": 397, "id": 14, "art": false },
+        { "x": 370, "y": 398, "id": 15, "art": false },
+        { "x": 453, "y": 392, "id": 16, "art": false }
+    ],
+    [
+        {
+            "n1": { "x": 115, "y": 90, "id": 0, "art": false },
+            "n2": { "x": 49, "y": 175, "id": 4, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 218, "y": 88, "id": 1, "art": false },
+            "n2": { "x": 115, "y": 90, "id": 0, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 324, "y": 89, "id": 2, "art": false },
+            "n2": { "x": 218, "y": 88, "id": 1, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 443, "y": 86, "id": 3, "art": false },
+            "n2": { "x": 324, "y": 89, "id": 2, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 384, "y": 175, "id": 7, "art": false },
+            "n2": { "x": 443, "y": 86, "id": 3, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 324, "y": 89, "id": 2, "art": false },
+            "n2": { "x": 384, "y": 175, "id": 7, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 262, "y": 178, "id": 6, "art": false },
+            "n2": { "x": 324, "y": 89, "id": 2, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 384, "y": 175, "id": 7, "art": false },
+            "n2": { "x": 262, "y": 178, "id": 6, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 218, "y": 88, "id": 1, "art": false },
+            "n2": { "x": 262, "y": 178, "id": 6, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 155, "y": 176, "id": 5, "art": false },
+            "n2": { "x": 218, "y": 88, "id": 1, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 155, "y": 176, "id": 5, "art": false },
+            "n2": { "x": 262, "y": 178, "id": 6, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 109, "y": 290, "id": 8, "art": false },
+            "n2": { "x": 49, "y": 175, "id": 4, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 109, "y": 290, "id": 8, "art": false },
+            "n2": { "x": 155, "y": 176, "id": 5, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 197, "y": 289, "id": 9, "art": false },
+            "n2": { "x": 109, "y": 290, "id": 8, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 302, "y": 285, "id": 10, "art": false },
+            "n2": { "x": 197, "y": 289, "id": 9, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 375, "y": 285, "id": 11, "art": false },
+            "n2": { "x": 302, "y": 285, "id": 10, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 384, "y": 175, "id": 7, "art": false },
+            "n2": { "x": 375, "y": 285, "id": 11, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 375, "y": 285, "id": 11, "art": false },
+            "n2": { "x": 262, "y": 178, "id": 6, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 262, "y": 178, "id": 6, "art": false },
+            "n2": { "x": 302, "y": 285, "id": 10, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 197, "y": 289, "id": 9, "art": false },
+            "n2": { "x": 155, "y": 176, "id": 5, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 496, "y": 272, "id": 12, "art": false },
+            "n2": { "x": 384, "y": 175, "id": 7, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 453, "y": 392, "id": 16, "art": false },
+            "n2": { "x": 496, "y": 272, "id": 12, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 375, "y": 285, "id": 11, "art": false },
+            "n2": { "x": 453, "y": 392, "id": 16, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 302, "y": 285, "id": 10, "art": false },
+            "n2": { "x": 370, "y": 398, "id": 15, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 375, "y": 285, "id": 11, "art": false },
+            "n2": { "x": 370, "y": 398, "id": 15, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 370, "y": 398, "id": 15, "art": false },
+            "n2": { "x": 263, "y": 397, "id": 14, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 263, "y": 397, "id": 14, "art": false },
+            "n2": { "x": 161, "y": 395, "id": 13, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 197, "y": 289, "id": 9, "art": false },
+            "n2": { "x": 263, "y": 397, "id": 14, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 161, "y": 395, "id": 13, "art": false },
+            "n2": { "x": 197, "y": 289, "id": 9, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 109, "y": 290, "id": 8, "art": false },
+            "n2": { "x": 161, "y": 395, "id": 13, "art": false },
+            "bridge": false
+        },
+        {
+            "n1": { "x": 115, "y": 90, "id": 0, "art": false },
+            "n2": { "x": 155, "y": 176, "id": 5, "art": false },
+            "bridge": false
+        }
+    ]
+]
