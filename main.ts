@@ -1,22 +1,41 @@
-import { assert } from "@std/assert/assert";
 import { assertEquals } from "@std/assert/equals";
 import { Hono } from "jsr:@hono/hono";
 
-const base_url = Deno.env.get("BASE_URL") ||
-    "http://localhost:8000/graphsupply";
-const prefix = Deno.env.get("PREFIX") || "graphsupply";
+const base_url = Deno.env.get("BASE_URL");
+if (!base_url) {
+    throw new Error("BASE_URL environment variable is not set");
+}
+const hostname = Deno.env.get("LISTEN_HOST");
+if (!hostname) {
+    throw new Error("LISTEN_HOST environment variable is not set");
+}
+const listenPort = Number(Deno.env.get("LISTEN_PORT"));
+if (isNaN(listenPort)) {
+    throw new Error("LISTEN_PORT environment variable is not set or invalid");
+}
+const base_url_parts = base_url.split("/");
+const prefix = base_url_parts.at(-1);
 
+const honoOptions = {
+    port: listenPort, // Example: Use port 8080
+    hostname,
+    onListen: function (addr: Deno.NetAddr) {
+        // Optional: Log when the server starts listening
+        console.log(
+            `@ ${
+                new Date().toLocaleTimeString()
+            } graphsupply listening on http://${addr.hostname}:${addr.port}`,
+        );
+    },
+};
 const app = new Hono();
 
-app.get("/", (c) => {
-    return c.text("Hello Hono!");
-});
-app.get(`/${prefix}/type`, async (c) => {
+app.get(`/${prefix}`, async (c) => {
     const dirs = [];
     try {
         for await (const dirEntry of Deno.readDir("./graphs")) {
             if (dirEntry.isDirectory) {
-                dirs.push(`${base_url}/type/${dirEntry.name}`);
+                dirs.push(`${base_url}/${dirEntry.name}`);
             }
         }
         return c.json(dirs);
@@ -31,13 +50,13 @@ app.get(`/${prefix}/type`, async (c) => {
         );
     }
 });
-app.get(`/${prefix}/type/andy-json`, async (c) => {
+app.get(`/${prefix}/andy-json`, async (c) => {
     const files = [];
     try {
         for await (const dirEntry of Deno.readDir("./graphs/andy-json")) {
             if (dirEntry.isFile) {
                 files.push(
-                    `${base_url}/type/andy-json/${dirEntry.name}`,
+                    `${base_url}/andy-json/${dirEntry.name}`,
                 );
             }
         }
@@ -53,7 +72,7 @@ app.get(`/${prefix}/type/andy-json`, async (c) => {
         );
     }
 });
-app.get(`/${prefix}/type/andy-json/:filename`, async (c) => {
+app.get(`/${prefix}/andy-json/:filename`, async (c) => {
     const filename = c.req.param("filename");
     const filePath = `./graphs/andy-json/${filename}`;
     try {
@@ -71,13 +90,13 @@ app.get(`/${prefix}/type/andy-json/:filename`, async (c) => {
         );
     }
 });
-app.get(`/${prefix}/type/matrix-csv`, async (c) => {
+app.get(`/${prefix}/matrix-csv`, async (c) => {
     const files = [];
     try {
         for await (const dirEntry of Deno.readDir("./graphs/matrix-csv")) {
             if (dirEntry.isFile) {
                 files.push(
-                    `${base_url}/type/matrix-csv/${dirEntry.name}`,
+                    `${base_url}/matrix-csv/${dirEntry.name}`,
                 );
             }
         }
@@ -93,7 +112,7 @@ app.get(`/${prefix}/type/matrix-csv`, async (c) => {
         );
     }
 });
-app.get(`/${prefix}/type/matrix-csv/:filename`, async (c) => {
+app.get(`/${prefix}/matrix-csv/:filename`, async (c) => {
     const filename = c.req.param("filename");
     const filePath = `./graphs/matrix-csv/${filename}`;
     try {
@@ -132,4 +151,4 @@ app.get(`/${prefix}/type/matrix-csv/:filename`, async (c) => {
     }
 });
 
-Deno.serve(app.fetch);
+Deno.serve(honoOptions, app.fetch);
