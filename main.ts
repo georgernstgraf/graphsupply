@@ -60,6 +60,7 @@ app.get(`/${prefix}/andy-json`, async (c) => {
                 );
             }
         }
+        files.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
         return c.json(files);
     } catch (error) {
         console.error("Error reading directories:", error);
@@ -100,6 +101,7 @@ app.get(`/${prefix}/matrix-csv`, async (c) => {
                 );
             }
         }
+        files.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
         return c.json(files);
     } catch (error) {
         console.error("Error reading directories:", error);
