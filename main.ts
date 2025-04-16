@@ -1,5 +1,6 @@
-import { assert, assertEquals } from "@std/assert";
+import { assert } from "@std/assert";
 import { Hono } from "jsr:@hono/hono";
+import * as NT from "npm:neverthrow";
 
 const base_url = Deno.env.get("BASE_URL");
 if (!base_url) {
@@ -18,28 +19,58 @@ const prefix = base_url_parts.at(-1);
 const adjacency_simple = "adjacency-simple";
 const adjacency_weighted = "adjacency-weighted";
 
-function isQuadraticSymmetricNumberArray(matrix: number[][]): boolean {
+function edgeStats(
+    matrix: number[][],
+): { directed: boolean; count: number; message: string } {
+    let count = 0;
+    let directed = false;
+    let message = "";
+    const n = matrix.length;
+    for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+            if (matrix[i][j] !== 0) {
+                count++;
+            }
+            if (matrix[j][i] !== 0) {
+                count++;
+            }
+            // just one deviation is enough to mark it as directed
+            if (matrix[i][j] !== matrix[j][i]) {
+                directed = true;
+                message = `directed because matrix[${i}][${j}] = ${
+                    matrix[i][j]
+                } BUT matrix[${j}][${i}] = ${matrix[j][i]}`;
+            }
+        }
+    }
+    if (!directed) {
+        count /= 2;
+        message =
+            "Edgecount was divided by 2 because matrix is symmetric on Hauptdiagonale";
+    }
+    return { directed, count, message };
+}
+function isQuadraticNumberArray(
+    matrix: number[][],
+): [boolean, string] {
     // TODO make three distinct functions
     const n = matrix.length;
     for (let i = 0; i < n; i++) {
         // Check if the row length is equal to n
         if (matrix[i].length !== n) {
-            return false;
+            return [
+                false,
+                `${n} lines but line ${i} has ${matrix[i].length} columns`,
+            ];
         }
         // and if the values are numbers
         for (const value of matrix[i]) {
             if (typeof value !== "number") {
-                return false;
-            }
-        }
-        // Check if the matrix is symmetric
-        for (let j = 0; j < i; j++) {
-            if (matrix[i][j] !== matrix[j][i]) {
-                return false;
+                return [false, `Value "${value}" on line ${i} is not a number`];
             }
         }
     }
-    return true;
+    return [true, ""];
 }
 const honoOptions = {
     port: listenPort, // Example: Use port 8080
@@ -158,7 +189,7 @@ app.get(`/${prefix}/${adjacency_simple}/:filename`, async (c) => {
                 return value;
             });
         });
-        assert(isQuadraticSymmetricNumberArray(matrix));
+        assert(isQuadraticNumberArray(matrix));
         return c.json({
             "lines": matrix.length,
             "columns": matrix.length,
@@ -182,6 +213,8 @@ app.get(`/${prefix}/${adjacency_weighted}`, async (c) => {
             const dirEntry of Deno.readDir(`./graphs/${adjacency_weighted}`)
         ) {
             if (dirEntry.isFile) {
+                const ending = dirEntry.name.split(".").pop()?.toLowerCase();
+                if (!ending || !["json", "csv"].includes(ending)) continue;
                 files.push(
                     `${base_url}/${adjacency_weighted}/${dirEntry.name}`,
                 );
@@ -208,13 +241,17 @@ app.get(`/${prefix}/${adjacency_weighted}/:filename`, async (c) => {
         const json = JSON.parse(fileContent);
         const matrix = json.matrix;
         assert(
-            isQuadraticSymmetricNumberArray(matrix),
+            isQuadraticNumberArray(matrix),
             "isQuadraticSymmetricNumberArray() failed",
         );
+        const { directed, count, message } = edgeStats(matrix);
         return c.json({
             "lines": matrix.length,
             "columns": matrix.length,
             "nodes": json.nodes,
+            "edges": count,
+            directed,
+            message,
             matrix,
         });
     } catch (error) {
