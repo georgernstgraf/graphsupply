@@ -1,23 +1,14 @@
 import { assert } from "@std/assert";
-import { Hono } from "jsr:@hono/hono";
+import { Context, Hono } from "jsr:@hono/hono";
 import * as NT from "npm:neverthrow";
 
-const base_url = Deno.env.get("BASE_URL");
-if (!base_url) {
-    throw new Error("BASE_URL environment variable is not set");
-}
-const hostname = Deno.env.get("LISTEN_HOST");
-if (!hostname) {
-    throw new Error("LISTEN_HOST environment variable is not set");
-}
-const listenPort = Number(Deno.env.get("LISTEN_PORT"));
-if (isNaN(listenPort)) {
-    throw new Error("LISTEN_PORT environment variable is not set or invalid");
-}
-const base_url_parts = base_url.split("/");
-const prefix = base_url_parts.at(-1);
-const adjacency_simple = "adjacency-simple";
-const adjacency_weighted = "adjacency-weighted";
+const baseUrl = Deno.env.get("BASE_URL") || "http://localhost:8080";
+const prefix = Deno.env.get("PREFIX") || "/";
+const baseUrlWithPrefix = `${baseUrl}${prefix}`;
+const listenHost = Deno.env.get("LISTEN_HOST") || "127.0.0.1";
+const listenPort = Number(Deno.env.get("LISTEN_PORT")) || 8080;
+const adjacencySimple = "adjacency-simple";
+const adjacencyWeighted = "adjacency-weighted";
 
 function edgeStats(
     matrix: number[][],
@@ -73,27 +64,27 @@ function isQuadraticNumberArray(
     return [true, ""];
 }
 const honoOptions = {
-    port: listenPort, // Example: Use port 8080
-    hostname,
+    port: listenPort,
+    hostname: listenHost,
     onListen: function (addr: Deno.NetAddr) {
-        // Optional: Log when the server starts listening
         console.log(
             `@ ${
                 new Date().toLocaleTimeString()
-            } graphsupply listening on http://${addr.hostname}:${addr.port}/${prefix}`,
+            } graphsupply listening on http://${addr.hostname}:${addr.port}${prefix}`,
         );
     },
 };
-const app = new Hono();
 
-app.get(`/${prefix}`, async (c) => {
+const rootHandler = async (c: Context) => {
     const dirs = [];
     try {
         for await (const dirEntry of Deno.readDir("./graphs")) {
             if (dirEntry.isDirectory) {
-                dirs.push(`${base_url}/${dirEntry.name}`);
+                dirs.push(`${baseUrlWithPrefix}/${dirEntry.name}`);
             }
         }
+        dirs.push(`${baseUrlWithPrefix}/andy-json`);
+        dirs.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
         return c.json(dirs);
     } catch (error) {
         console.error("Error reading directories:", error);
@@ -105,14 +96,19 @@ app.get(`/${prefix}`, async (c) => {
             500,
         );
     }
-});
-app.get(`/${prefix}/andy-json`, async (c) => {
+};
+const app = new Hono().basePath(prefix);
+app.get("/", rootHandler);
+app.get("", rootHandler);
+app.get(`/andy-json-originals`, async (c) => {
     const files = [];
     try {
-        for await (const dirEntry of Deno.readDir("./graphs/andy-json")) {
+        for await (
+            const dirEntry of Deno.readDir("./graphs/andy-json-originals")
+        ) {
             if (dirEntry.isFile) {
                 files.push(
-                    `${base_url}/andy-json/${dirEntry.name}`,
+                    `${baseUrl}${c.req.path}/${dirEntry.name}`,
                 );
             }
         }
@@ -129,9 +125,9 @@ app.get(`/${prefix}/andy-json`, async (c) => {
         );
     }
 });
-app.get(`/${prefix}/andy-json/:filename`, async (c) => {
+app.get(`/andy-json-originals/:filename`, async (c) => {
     const filename = c.req.param("filename");
-    const filePath = `./graphs/andy-json/${filename}`;
+    const filePath = `./graphs/andy-json-originals/${filename}`;
     try {
         const fileContent = await Deno.readTextFile(filePath);
         const jsonData = JSON.parse(fileContent);
@@ -147,15 +143,15 @@ app.get(`/${prefix}/andy-json/:filename`, async (c) => {
         );
     }
 });
-app.get(`/${prefix}/${adjacency_simple}`, async (c) => {
+app.get(`/${adjacencySimple}`, async (c) => {
     const files = [];
     try {
         for await (
-            const dirEntry of Deno.readDir(`./graphs/${adjacency_simple}`)
+            const dirEntry of Deno.readDir(`./graphs/${adjacencySimple}`)
         ) {
             if (dirEntry.isFile) {
                 files.push(
-                    `${base_url}/${adjacency_simple}/${dirEntry.name}`,
+                    `${baseUrlWithPrefix}/${adjacencySimple}/${dirEntry.name}`,
                 );
             }
         }
@@ -172,9 +168,9 @@ app.get(`/${prefix}/${adjacency_simple}`, async (c) => {
         );
     }
 });
-app.get(`/${prefix}/${adjacency_simple}/:filename`, async (c) => {
+app.get(`/${adjacencySimple}/:filename`, async (c) => {
     const filename = c.req.param("filename");
-    const filePath = `./graphs/${adjacency_simple}/${filename}`;
+    const filePath = `./graphs/${adjacencySimple}/${filename}`;
     try {
         const fileContent = await Deno.readTextFile(filePath);
         const lines = fileContent.split("\n");
@@ -206,17 +202,17 @@ app.get(`/${prefix}/${adjacency_simple}/:filename`, async (c) => {
         );
     }
 });
-app.get(`/${prefix}/${adjacency_weighted}`, async (c) => {
+app.get(`/${adjacencyWeighted}`, async (c) => {
     const files = [];
     try {
         for await (
-            const dirEntry of Deno.readDir(`./graphs/${adjacency_weighted}`)
+            const dirEntry of Deno.readDir(`./graphs/${adjacencyWeighted}`)
         ) {
             if (dirEntry.isFile) {
                 const ending = dirEntry.name.split(".").pop()?.toLowerCase();
                 if (!ending || !["json", "csv"].includes(ending)) continue;
                 files.push(
-                    `${base_url}/${adjacency_weighted}/${dirEntry.name}`,
+                    `${baseUrlWithPrefix}/${adjacencyWeighted}/${dirEntry.name}`,
                 );
             }
         }
@@ -233,9 +229,9 @@ app.get(`/${prefix}/${adjacency_weighted}`, async (c) => {
         );
     }
 });
-app.get(`/${prefix}/${adjacency_weighted}/:filename`, async (c) => {
+app.get(`/${adjacencyWeighted}/:filename`, async (c) => {
     const filename = c.req.param("filename");
-    const filePath = `./graphs/${adjacency_weighted}/${filename}`;
+    const filePath = `./graphs/${adjacencyWeighted}/${filename}`;
     try {
         const fileContent = await Deno.readTextFile(filePath);
         const json = JSON.parse(fileContent);
