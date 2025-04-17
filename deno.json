@@ -2,7 +2,8 @@
     "tasks": {
         "start": "deno run --env-file=.env --allow-net --allow-read --allow-env main.ts",
         "dev": "deno run --env-file=.env --allow-net --allow-read --allow-env --watch main.ts",
-        "test": "deno test --env-file=.env --allow-net --allow-read --allow-env --trace-leaks"
+        "test": "deno test --env-file=.env --allow-net --allow-read --allow-env --trace-leaks",
+        "testprod": "deno test --env-file=.env-prod --allow-net --allow-read --allow-env --trace-leaks"
     },
     "imports": {
         "@hono/hono": "jsr:@hono/hono@^4.7.6",
