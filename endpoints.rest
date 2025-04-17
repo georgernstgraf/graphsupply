@@ -1,2 +1,3 @@
 GET http://localhost:8888/graphsupply
 ###
+GET https://grafg1.spengergasse.at/graphsupply/andy-json-cooked/bsp_813.json
