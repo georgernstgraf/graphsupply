@@ -10,6 +10,13 @@ const listenPort = Number(Deno.env.get("LISTEN_PORT")) || 8080;
 const adjacencySimple = "adjacency-simple";
 const adjacencyWeighted = "adjacency-weighted";
 
+interface AndyNode {
+    id: number;
+}
+interface AndyEdge {
+    n1: AndyNode;
+    n2: AndyNode;
+}
 function edgeStats(
     matrix: number[][],
 ): { directed: boolean; count: number; message: string } {
@@ -83,7 +90,7 @@ const rootHandler = async (c: Context) => {
                 dirs.push(`${baseUrlWithPrefix}/${dirEntry.name}`);
             }
         }
-        dirs.push(`${baseUrlWithPrefix}/andy-json`);
+        dirs.push(`${baseUrlWithPrefix}/andy-json-cooked`);
         dirs.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
         return c.json(dirs);
     } catch (error) {
@@ -125,32 +132,6 @@ app.get(`/andy-json-originals`, async (c) => {
         );
     }
 });
-app.get(`/andy-json`, async (c) => {
-    return c.json("is scho guad");
-    //const files = [];
-    //try {
-    //    for await (
-    //        const dirEntry of Deno.readDir("./graphs/andy-json-originals")
-    //    ) {
-    //        if (dirEntry.isFile) {
-    //            files.push(
-    //                `${baseUrl}${c.req.path}/${dirEntry.name}`,
-    //            );
-    //        }
-    //    }
-    //    files.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-    //    return c.json(files);
-    //} catch (error) {
-    //    console.error("Error reading directories:", error);
-    //    const errorMessage = error instanceof Error
-    //        ? error.message
-    //        : String(error);
-    //    return c.json(
-    //        { error: `Failed to read directories: ${errorMessage}` },
-    //        500,
-    //    );
-    //}
-});
 app.get(`/andy-json-originals/:filename`, async (c) => {
     const filename = c.req.param("filename");
     const filePath = `./graphs/andy-json-originals/${filename}`;
@@ -158,6 +139,72 @@ app.get(`/andy-json-originals/:filename`, async (c) => {
         const fileContent = await Deno.readTextFile(filePath);
         const jsonData = JSON.parse(fileContent);
         return c.json(jsonData);
+    } catch (error) {
+        console.error(`Error reading file ${filePath}:`, error);
+        const errorMessage = error instanceof Error
+            ? error.message
+            : String(error);
+        return c.json(
+            { error: `Failed to read file: ${errorMessage}` },
+            500,
+        );
+    }
+});
+app.get(`/andy-json-cooked`, async (c) => {
+    const files = [];
+    try {
+        for await (
+            const dirEntry of Deno.readDir("./graphs/andy-json-originals")
+        ) {
+            if (dirEntry.isFile) {
+                files.push(
+                    `${baseUrl}${c.req.path}/${dirEntry.name}`,
+                );
+            }
+        }
+        files.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+        return c.json(files);
+    } catch (error) {
+        console.error("Error reading directories:", error);
+        const errorMessage = error instanceof Error
+            ? error.message
+            : String(error);
+        return c.json(
+            { error: `Failed to read directories: ${errorMessage}` },
+            500,
+        );
+    }
+});
+app.get(`/andy-json-cooked/:filename`, async (c) => {
+    const filename = c.req.param("filename");
+    const filePath = `./graphs/andy-json-originals/${filename}`;
+    try {
+        const fileContent = await Deno.readTextFile(filePath);
+        const jsonData = JSON.parse(fileContent);
+        let nodes = jsonData[0];
+        nodes = nodes.map((node: AndyNode) => node.id);
+        let edges = jsonData[1];
+        edges = edges.map((edge: AndyEdge) => [edge.n1.id, edge.n2.id]);
+        const matrix = new Array(nodes.length).fill(0).map(() =>
+            new Array(nodes.length).fill(0)
+        );
+        for (const edge of edges) {
+            const i = edge[0];
+            const j = edge[1];
+            matrix[i][j] = 1;
+            matrix[j][i] = 1;
+        }
+        assert(isQuadraticNumberArray(matrix));
+        const { directed, count, message } = edgeStats(matrix);
+        return c.json({
+            "lines": matrix.length,
+            "columns": matrix.length,
+            "nodes": nodes.length,
+            "edges": count,
+            directed,
+            message,
+            matrix,
+        });
     } catch (error) {
         console.error(`Error reading file ${filePath}:`, error);
         const errorMessage = error instanceof Error
