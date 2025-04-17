@@ -105,6 +105,13 @@ const rootHandler = async (c: Context) => {
     }
 };
 const app = new Hono().basePath(prefix);
+app.use("*", async (c, next) => {
+    console.log(
+        `@ ${new Date().toLocaleTimeString()} ${c.req.method} ${c.req.path}`,
+    );
+    await next();
+    c.res.headers.set("Access-Control-Allow-Origin", "*");
+});
 app.get("/", rootHandler);
 app.get("", rootHandler);
 app.get(`/andy-json-originals`, async (c) => {
