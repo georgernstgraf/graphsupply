@@ -125,6 +125,32 @@ app.get(`/andy-json-originals`, async (c) => {
         );
     }
 });
+app.get(`/andy-json`, async (c) => {
+    return c.json("is scho guad");
+    //const files = [];
+    //try {
+    //    for await (
+    //        const dirEntry of Deno.readDir("./graphs/andy-json-originals")
+    //    ) {
+    //        if (dirEntry.isFile) {
+    //            files.push(
+    //                `${baseUrl}${c.req.path}/${dirEntry.name}`,
+    //            );
+    //        }
+    //    }
+    //    files.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    //    return c.json(files);
+    //} catch (error) {
+    //    console.error("Error reading directories:", error);
+    //    const errorMessage = error instanceof Error
+    //        ? error.message
+    //        : String(error);
+    //    return c.json(
+    //        { error: `Failed to read directories: ${errorMessage}` },
+    //        500,
+    //    );
+    //}
+});
 app.get(`/andy-json-originals/:filename`, async (c) => {
     const filename = c.req.param("filename");
     const filePath = `./graphs/andy-json-originals/${filename}`;

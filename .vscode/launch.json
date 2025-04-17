@@ -6,7 +6,7 @@
     "configurations": [
         {
             "request": "launch",
-            "name": "Debug with Deno",
+            "name": "Graphsupply",
             "type": "node",
             "program": "${workspaceFolder}/main.ts",
             "cwd": "${workspaceFolder}",
@@ -14,10 +14,26 @@
             "runtimeExecutable": "/home/georg/.deno/bin/deno",
             "runtimeArgs": [
                 "run",
-                "--unstable",
                 "--env-file=.env",
                 "--inspect-wait",
                 "--allow-all"
+            ],
+            "attachSimplePort": 9229
+        },
+        {
+            "request": "launch",
+            "name": "Test Graphsupply",
+            "type": "node",
+            "program": "${workspaceFolder}/main_test.ts",
+            "cwd": "${workspaceFolder}",
+            "env": {},
+            "runtimeExecutable": "/home/georg/.deno/bin/deno",
+            "runtimeArgs": [
+                "test",
+                "--env-file=.env",
+                "--inspect-wait",
+                "--allow-all",
+                "--trace-leaks"
             ],
             "attachSimplePort": 9229
         }
