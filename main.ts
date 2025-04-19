@@ -314,22 +314,48 @@ app.get(`/${adjacencyWeighted}/:filename`, async (c) => {
     const filePath = `./graphs/${adjacencyWeighted}/${filename}`;
     try {
         const fileContent = await Deno.readTextFile(filePath);
-        const json = JSON.parse(fileContent);
-        const matrix = json.matrix;
-        assert(
-            isQuadraticNumberArray(matrix),
-            "isQuadraticSymmetricNumberArray() failed",
+        const ending = filename.split(".").pop()?.toLowerCase();
+        if (ending === "json") {
+            const json = JSON.parse(fileContent);
+            const matrix = json.matrix;
+            assert(
+                isQuadraticNumberArray(matrix),
+                "isQuadraticSymmetricNumberArray() failed",
+            );
+            const { directed, count, message } = edgeStats(matrix);
+            return c.json({
+                "lines": matrix.length,
+                "columns": matrix.length,
+                "nodes": json.nodes,
+                "edges": count,
+                directed,
+                message,
+                matrix,
+            });
+        }
+        if (ending === "csv") {
+            const lines = fileContent.split("\n");
+            const matrix = lines.map((line) => {
+                const values = line.split(";");
+                return values.map((valueStr) => {
+                    const trimmedValue = valueStr.trim();
+                    const value = Number(trimmedValue);
+                    if (isNaN(value)) {
+                        throw new Error(`Invalid number: ${trimmedValue}`);
+                    }
+                    return value;
+                });
+            });
+            assert(isQuadraticNumberArray(matrix));
+            return c.json({
+                "lines": matrix.length,
+                "columns": matrix.length,
+                matrix,
+            });
+        }
+        throw new Error(
+            `Unsupported file format: ${ending}. Only JSON and CSV are supported.`,
         );
-        const { directed, count, message } = edgeStats(matrix);
-        return c.json({
-            "lines": matrix.length,
-            "columns": matrix.length,
-            "nodes": json.nodes,
-            "edges": count,
-            directed,
-            message,
-            matrix,
-        });
     } catch (error) {
         console.error(`Error reading file ${filePath}:`, error);
         const errorMessage = error instanceof Error
