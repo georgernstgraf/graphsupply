@@ -367,5 +367,79 @@ app.get(`/${adjacencyWeighted}/:filename`, async (c) => {
         );
     }
 });
-
+app.post("/random", async (c) => {
+    const understood_params = {
+        "density": "0-100% (number, default: 50)",
+        "nodes": "Desired number of nodes 2-200 (number, default: 10)",
+        "directed":
+            "Ob der Graph gerichtet sein soll (boolean, default: false)",
+        "weighted":
+            "Ob der Graph gewichtet sein soll für Dijkstra (boolean, default: false)",
+        "loops": "Schlingen? (boolean, default: false)",
+    };
+    const params = await c.req.json().catch(() => ({}));
+    const density = Number(params.density) || 50;
+    if (density < 0 || density > 100) {
+        return c.json(
+            { error: `Density must be between 0 and 100` },
+            400,
+        );
+    }
+    const nodes = Number(params.nodes) || 10;
+    if (nodes < 2 || nodes > 200) {
+        return c.json(
+            { error: `Nodes must be between 2 and 200` },
+            400,
+        );
+    }
+    const directed = params.directed || false;
+    const weighted = params.weighted || false;
+    const loops = params.loops || false;
+    const matrix = Array.from(
+        { length: nodes },
+        () => Array.from({ length: nodes }, () => 0),
+    );
+    const chosen = () => {
+        const random = Math.random() * 100;
+        return random < density;
+    };
+    const rndWeight = () => {
+        return Math.floor(Math.random() * nodes + 1);
+    };
+    // do all rows
+    for (let row = 0; row < nodes; row++) {
+        // for inner loop directed comes into play, if so i do upper square
+        // start with row if loops, otherwise row + 1
+        // condition is right border
+        for (
+            let column = directed ? 0 : row + (loops ? 0 : 1);
+            column < nodes;
+            column++
+        ) { // do all columns
+            console.log(`debug: ${row}/${column}`);
+            if (row === column && !loops) continue; // keep main diagonal at 0
+            if (!chosen()) continue;
+            matrix[row][column] = weighted ? rndWeight() : 1;
+            if (!directed) { // ie symmetric
+                matrix[column][row] = matrix[row][column];
+            }
+        }
+    }
+    const edges = matrix.reduce((acc, row) => {
+        return acc + row.reduce((inner_acc, value) => {
+            return inner_acc + (value !== 0 ? 1 : 0);
+        }, 0);
+    }, 0);
+    return c.json({
+        "lines": matrix.length,
+        "columns": matrix.length,
+        "nodes": nodes,
+        "edges": directed ? edges : edges / 2,
+        directed,
+        message: `Graph generated with ${density}% density`,
+        understood_params,
+        params,
+        matrix,
+    });
+});
 Deno.serve(honoOptions, app.fetch);
