@@ -1,6 +1,6 @@
 import { assert } from "@std/assert";
 import { Context, Hono } from "jsr:@hono/hono";
-import * as NT from "npm:neverthrow";
+import { cors } from "jsr:@hono/hono/cors";
 
 const baseUrl = Deno.env.get("BASE_URL") || "http://localhost:8080";
 const prefix = Deno.env.get("PREFIX") || "/";
@@ -105,12 +105,14 @@ const rootHandler = async (c: Context) => {
     }
 };
 const app = new Hono().basePath(prefix);
+app.use("*", cors());
 app.use("*", async (c, next) => {
-    console.log(
-        `@ ${new Date().toLocaleTimeString()} ${c.req.method} ${c.req.path}`,
-    );
     await next();
-    c.res.headers.set("Access-Control-Allow-Origin", "*");
+    console.log(
+        `${
+            new Date().toLocaleTimeString()
+        } ${c.res.status} ${c.req.method} ${c.req.path}`,
+    );
 });
 app.get("/", rootHandler);
 app.get("", rootHandler);
