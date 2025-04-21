@@ -418,7 +418,6 @@ app.post("/random", async (c) => {
             column < nodes;
             column++
         ) { // do all columns
-            console.log(`debug: ${row}/${column}`);
             if (row === column && !loops) continue; // keep main diagonal at 0
             if (!chosen()) continue;
             matrix[row][column] = weighted ? rndWeight() : 1;
