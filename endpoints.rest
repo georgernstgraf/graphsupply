@@ -24,5 +24,10 @@ GET http://localhost:8888/graphsupply/random?nodes=3
 GET http://localhost:8888/graphsupply/random?nodes=5&density=100
 
 ###
+GET https://grafg1.spengergasse.at/graphsupply/random?nodes=3&loops=true&density=100
+
+###
 GET http://localhost:8888/graphsupply/random?nodes=3
 
+###
+GET http://localhost:8888/graphsupply/random?nodes=3&loops=true&density=99&weighted=r

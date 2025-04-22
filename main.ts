@@ -401,9 +401,9 @@ function random(c: Context, params: Record<string, unknown>) {
             400,
         );
     }
-    const directed = params.directed || false;
-    const weighted = params.weighted || false;
-    const loops = params.loops || false;
+    const directed = params.directed ? true : false;
+    const weighted = params.weighted ? true : false;
+    const loops = params.loops ? true : false;
     const matrix = Array.from(
         { length: nodes },
         () => Array.from({ length: nodes }, () => 0),
@@ -439,14 +439,20 @@ function random(c: Context, params: Record<string, unknown>) {
         }, 0);
     }, 0);
     return c.json({
-        "lines": matrix.length,
-        "columns": matrix.length,
-        "nodes": nodes,
-        "edges": directed ? edges : edges / 2,
-        directed,
-        message: `Graph generated with ${density}% density`,
-        understood_params,
-        params,
+        "metadata": {
+            "params": {
+                nodes,
+                density,
+                directed,
+                weighted,
+                loops,
+                "lines": matrix.length,
+                "columns": matrix.length,
+            },
+            "edges": directed ? edges : edges / 2,
+            message: `Graph generated with ${density}% density`,
+            understood_params,
+        },
         matrix,
     });
 }
