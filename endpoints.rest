@@ -18,3 +18,11 @@ Content-Type: application/json
 
 {"density": 50, "nodes": 7, "weighted": true}
 ###
+GET http://localhost:8888/graphsupply/random?nodes=3
+
+###
+GET http://localhost:8888/graphsupply/random?nodes=5&density=100
+
+###
+GET http://localhost:8888/graphsupply/random?nodes=3
+

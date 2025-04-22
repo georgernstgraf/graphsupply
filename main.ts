@@ -370,6 +370,14 @@ app.get(`/${adjacencyWeighted}/:filename`, async (c) => {
     }
 });
 app.post("/random", async (c) => {
+    const params = await c.req.json().catch(() => ({}));
+    return random(c, params);
+});
+app.get("/random", (c) => {
+    const params = c.req.query();
+    return random(c, params);
+});
+function random(c: Context, params: Record<string, unknown>) {
     const understood_params = {
         "density": "0-100% (number, default: 50)",
         "nodes": "Desired number of nodes 2-200 (number, default: 10)",
@@ -379,7 +387,6 @@ app.post("/random", async (c) => {
             "Ob der Graph gewichtet sein soll für Dijkstra (boolean, default: false)",
         "loops": "Schlingen? (boolean, default: false)",
     };
-    const params = await c.req.json().catch(() => ({}));
     const density = Number(params.density) || 50;
     if (density < 0 || density > 100) {
         return c.json(
@@ -442,5 +449,5 @@ app.post("/random", async (c) => {
         params,
         matrix,
     });
-});
+}
 Deno.serve(honoOptions, app.fetch);
