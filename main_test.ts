@@ -1,5 +1,6 @@
 import { fail } from "@std/assert/fail";
 import * as NT from "npm:neverthrow";
+import * as helpers from "./libbe/helpers.ts";
 
 const crawled = new Set<string>();
 
@@ -15,7 +16,7 @@ async function crawl(baseUrl: string): Promise<void> {
             `Failed to retrieve JSON from ${baseUrl}: ${retrieved.error.message}`,
         );
     }
-    const urls = [];
+    const urls: string[] = [];
     const json = retrieved.value;
     if (typeof json == "string" && json.startsWith("http")) {
         urls.push(json);
@@ -34,7 +35,7 @@ async function crawl(baseUrl: string): Promise<void> {
         await crawl(url);
     });
 }
-async function getJson(url: string): Promise<NT.Result<any, Error>> {
+async function getJson(url: string): Promise<NT.Result<helpers.json, Error>> {
     try {
         const response = await fetch(url);
         if (!response.ok) {
