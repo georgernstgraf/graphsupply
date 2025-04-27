@@ -1,8 +1,11 @@
 import { assert } from "@std/assert";
-import { Hono } from "jsr:@hono/hono";
-import { cors } from "jsr:@hono/hono/cors";
+import { Hono } from "@hono/hono";
+import { cors } from "@hono/hono/cors";
+import session from "hono-session";
+
 import * as helpers from "./libbe/helpers.ts";
 import { config } from "./libbe/config.ts";
+import { store } from "./libbe/memcached.ts";
 
 config.baseUrl = Deno.env.get("BASE_URL") || "http://localhost:8080";
 config.prefix = Deno.env.get("PREFIX") || "/";
@@ -19,24 +22,15 @@ interface AndyEdge {
     n1: AndyNode;
     n2: AndyNode;
 }
-const honoOptions = {
-    port: config.listenPort,
-    hostname: config.listenHost,
-    onListen: function (addr: Deno.NetAddr) {
-        console.log(
-            `@ ${
-                new Date().toLocaleTimeString()
-            } graphsupply listening on http://${addr.hostname}:${addr.port}${config.prefix}`,
-        );
-    },
-};
 
 const app = new Hono().basePath(config.prefix);
+app.use("*", session({ store }));
 app.use("*", cors());
 app.use("*", helpers.finalLogger);
 
 app.get("/", helpers.indexHandler);
 app.get("", helpers.indexHandler);
+app.get("/favicon.ico", helpers.favIconHandler);
 app.get("/list", helpers.rootHandler);
 app.get(`/andy-json-originals`, async (c) => {
     const files = [];
@@ -301,4 +295,24 @@ app.get("/random", (c) => {
     const params = c.req.query();
     return helpers.random(c, params);
 });
-Deno.serve(honoOptions, app.fetch);
+//app.get("/last", (c) => {
+//    const last = c.session.get("last") || "nothing";
+//    return c.json({ last });
+//});
+app.get("/login", (c) => {
+    if (!c.session.last) {
+        c.session.last = new Date().toISOString();
+    }
+    return c.json({ last: c.session.last, now: new Date().toISOString() });
+});
+Deno.serve({
+    port: config.listenPort,
+    hostname: config.listenHost,
+    onListen: function (addr: Deno.NetAddr) {
+        console.log(
+            `@ ${
+                new Date().toLocaleTimeString()
+            } graphsupply listening on http://${addr.hostname}:${addr.port}${config.prefix}`,
+        );
+    },
+}, app.fetch);

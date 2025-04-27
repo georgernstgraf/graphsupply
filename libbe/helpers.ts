@@ -16,6 +16,11 @@ export async function indexHandler(c: Context) {
     }
     return c.html(await Deno.readTextFile("static/index.html"));
 }
+export async function favIconHandler(c: Context) {
+    const favicon = await Deno.readFile("static/favicon.ico");
+    c.header("Content-Type", "image/x-icon");
+    return c.body(favicon);
+}
 export type json = { matrix: number[][] } | string[];
 export async function rootHandler(c: Context) {
     const dirs = [];
@@ -94,7 +99,7 @@ export function isQuadraticNumberArray(
     return [true, ""];
 }
 
-export function random(c: Context, params: Record<string, unknown>) {
+export function random(c: Context, queryParams: Record<string, unknown>) {
     const understood_params = {
         "density": "0-100% (number, default: 50)",
         "nodes": "Desired number of nodes 2-200 (number, default: 10)",
@@ -104,23 +109,23 @@ export function random(c: Context, params: Record<string, unknown>) {
             "Ob der Graph gewichtet sein soll für Dijkstra (boolean, default: false)",
         "loops": "Schlingen? (boolean, default: false)",
     };
-    const density = Number(params.density) || 50;
+    const density = Number(queryParams.density) || 50;
     if (density < 0 || density > 100) {
         return c.json(
             { error: `Density must be between 0 and 100` },
             400,
         );
     }
-    const nodes = Number(params.nodes) || 10;
+    const nodes = Number(queryParams.nodes) || 10;
     if (nodes < 2 || nodes > 200) {
         return c.json(
             { error: `Nodes must be between 2 and 200` },
             400,
         );
     }
-    const directed = params.directed ? true : false;
-    const weighted = params.weighted ? true : false;
-    const loops = params.loops ? true : false;
+    const directed = queryParams.directed ? true : false;
+    const weighted = queryParams.weighted ? true : false;
+    const loops = queryParams.loops ? true : false;
     const matrix = Array.from(
         { length: nodes },
         () => Array.from({ length: nodes }, () => 0),
@@ -155,21 +160,23 @@ export function random(c: Context, params: Record<string, unknown>) {
             return inner_acc + (value !== 0 ? 1 : 0);
         }, 0);
     }, 0);
-    return c.json({
+    const params = {
+        nodes,
+        density,
+        directed,
+        weighted,
+        loops,
+    };
+    const fullJson = {
         "metadata": {
-            "params": {
-                nodes,
-                density,
-                directed,
-                weighted,
-                loops,
-                "lines": matrix.length,
-                "columns": matrix.length,
-            },
+            params,
             "edges": directed ? edges : edges / 2,
             message: `Graph generated with ${density}% density`,
             understood_params,
         },
         matrix,
-    });
+    };
+    const sess = c.get("session");
+    sess.set("last", fullJson);
+    return c.json(fullJson);
 }
