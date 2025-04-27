@@ -9,6 +9,11 @@ export async function finalLogger(c: Context, next: () => Promise<void>) {
     );
 }
 export async function indexHandler(c: Context) {
+    if (!c.req.path.endsWith("/")) {
+        const url = new URL(c.req.url);
+        url.pathname = c.req.path + "/";
+        return c.redirect(url.toString(), 308); // 308: Permanent Redirect
+    }
     return c.html(await Deno.readTextFile("static/index.html"));
 }
 export type json = { matrix: number[][] } | string[];

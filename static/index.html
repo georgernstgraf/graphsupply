@@ -5,11 +5,80 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+          crossorigin="anonymous">
+    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+            crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.31.2/dist/cytoscape.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape-svg@0.4.0/cytoscape-svg.js"></script>
+
+    <title>Graphsupply</title>
 </head>
 
 <body>
-    Graphiiiii
+    <main class="container-fluid d-flex">
+        <div class="d-flex flex-column gap-3 w-25">
+
+            <h1 class="text-center">Graphsupply</h1>
+            <form id="graph-config"
+                  class="border d-flex flex-column gap-1 p-1 rounded-2">
+                <h3 class="my-1 text-center">Configure your wish-graph</h3>
+                <!--
+                "directed": "Ob der Graph gerichtet sein soll (boolean, default: false)",
+                "weighted": "Ob der Graph gewichtet sein soll für Dijkstra (boolean, default: false)",
+                "loops": "Schlingen? (boolean, default: false)"
+-->
+
+                <label class="form-label d-flex gap-3 align-items-center justify-content-between border-top mb-0 pt-1 px-1">Nodes (2-200):
+                    <input type="number"
+                           min="2"
+                           max="200"
+                           value="10">
+                    Choose desired number of nodes
+                </label>
+                <label class="form-label d-flex gap-3 align-items-center justify-content-between border-top mb-0 pt-1 px-1">Density (%):
+                    <input type="number"
+                           min="0"
+                           max="100"
+                           value="50">
+                    Probability that any edge will be created
+                </label>
+                <label class="form-check-label d-flex gap-3 align-items-center justify-content-between border-top mb-0 pt-1 px-1">Directed:
+                    <input class="form-check-input"
+                           type="checkbox"
+                           id="in-directed">
+                    keep unchecked for a simple graph
+                </label>
+                <label class="form-check-label d-flex gap-3 align-items-center justify-content-between border-top mb-0 pt-1 px-1">Weighted:
+                    <input class="form-check-input"
+                           type="checkbox"
+                           id="in-weighted">
+                    put weights onto the edges; uncheck for simple, check for Dijkstra and MST
+                </label>
+                <label class="form-check-label d-flex gap-3 align-items-center justify-content-between  border-top mb-0 pt-1 px-1">Loops:
+                    <input class="form-check-input"
+                           type="checkbox"
+                           id="in-loops">
+                    allow self-loops; uncheck for a simple graph
+                </label>
+                <div class="btn-group border-top mb-0 pt-1 px-1"
+                     role="group">
+                    <button type="button"
+                            class="btn btn-outline-secondary">dl CSV</button>
+                    <button type="button"
+                            class="btn btn-outline-secondary">dl JSON</button>
+                    <button type="button"
+                            class="btn btn-outline-secondary">display</button>
+                </div>
+
+            </form>
+
+            <a href="list">LIST</a><a href="random">random</a>
+        </div>
+    </main>
 </body>
 
 </html>
