@@ -63,7 +63,7 @@ async function getJson(url: string): Promise<NT.Result<any, Error>> {
 Deno.test("Start Crawling", async () => {
     const baseUrl = Deno.env.get("BASE_URL") || "http://localhost:8080";
     const prefix = Deno.env.get("PREFIX") || "/";
-    const baseUrlWithPrefix = `${baseUrl}${prefix}`;
+    const baseUrlWithPrefix = `${baseUrl}${prefix}/list`;
     try {
         await crawl(baseUrlWithPrefix); // throws if an error occurs}
     } catch (error) {
