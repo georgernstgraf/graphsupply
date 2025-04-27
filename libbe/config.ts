@@ -6,7 +6,6 @@ interface Config {
     listenPort?: number;
     adjacencySimple?: string;
     adjacencyWeighted?: string;
-    memcached_table: string;
 }
 
 export const config: Config = {};

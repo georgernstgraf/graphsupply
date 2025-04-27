@@ -24,7 +24,7 @@ interface AndyEdge {
 }
 
 const app = new Hono().basePath(config.prefix);
-app.use("*", session({ store }));
+app.use("*", session({ store: new Map() }));
 app.use("*", cors());
 app.use("*", helpers.finalLogger);
 
