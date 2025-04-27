@@ -11,7 +11,7 @@ export async function finalLogger(c: Context, next: () => Promise<void>) {
 export async function indexHandler(c: Context) {
     return c.html(await Deno.readTextFile("static/index.html"));
 }
-export type json = { matrix: number[][] } | string;
+export type json = { matrix: number[][] } | string[];
 export async function rootHandler(c: Context) {
     const dirs = [];
     try {

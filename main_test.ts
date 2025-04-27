@@ -18,9 +18,7 @@ async function crawl(baseUrl: string): Promise<void> {
     }
     const urls: string[] = [];
     const json = retrieved.value;
-    if (typeof json == "string" && json.startsWith("http")) {
-        urls.push(json);
-    } else if (Array.isArray(json)) {
+    if (Array.isArray(json)) {
         json.forEach((item) => {
             if (typeof item == "string") {
                 urls.push(item);
