@@ -2,7 +2,7 @@ import { assert } from "@std/assert";
 import { Hono } from "@hono/hono";
 import { cors } from "@hono/hono/cors";
 import session from "hono-session";
-
+// local imports
 import * as helpers from "./libbe/helpers.ts";
 import { config } from "./libbe/config.ts";
 import { store } from "./libbe/memcached.ts";
@@ -24,7 +24,23 @@ interface AndyEdge {
 }
 
 const app = new Hono().basePath(config.prefix);
-app.use("*", session({ store: new Map() }));
+app.use(
+    "*",
+    session({
+        store: new Map(),
+        cookieOptions: {
+            httpOnly: true,
+            secure: false,
+            maxAge: 87000,
+            path: "/",
+        },
+        existsCookieOptions: {
+            secure: false,
+            httpOnly: false,
+            path: "/",
+        },
+    }),
+);
 app.use("*", cors());
 app.use("*", helpers.finalLogger);
 
@@ -301,10 +317,22 @@ app.get("/random", (c) => {
 //});
 app.get("/login", (c) => {
     if (!c.session.last) {
-        c.session.last = new Date().toISOString();
+        c.session.last = nowstr();
     }
-    return c.json({ last: c.session.last, now: new Date().toISOString() });
+    return c.json({
+        last: c.session.last,
+        now: nowstr(),
+        json: c.session.json,
+    });
 });
+function nowstr() {
+    const date = new Date();
+    return [
+        date.getHours().toString().padStart(2, "0"),
+        date.getMinutes().toString().padStart(2, "0"),
+        date.getSeconds().toString().padStart(2, "0"),
+    ].join(":");
+}
 Deno.serve({
     port: config.listenPort,
     hostname: config.listenHost,

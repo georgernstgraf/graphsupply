@@ -176,7 +176,7 @@ export function random(c: Context, queryParams: Record<string, unknown>) {
         },
         matrix,
     };
-    const sess = c.get("session");
-    sess.set("last", fullJson);
+    const sess = c.session;
+    sess.json = fullJson;
     return c.json(fullJson);
 }
