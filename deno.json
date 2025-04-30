@@ -3,7 +3,10 @@
         "start": "deno run --env-file=.env --allow-net --allow-read --allow-env main.ts",
         "dev": "deno run --env-file=.env --allow-net --allow-read --allow-env --watch main.ts",
         "test": "deno test --env-file=.env --allow-net --allow-read --allow-env --trace-leaks",
-        "testprod": "deno test --env-file=.env-prod --allow-net --allow-read --allow-env --trace-leaks"
+        "testprod": "deno test --env-file=.env-prod --allow-net --allow-read --allow-env --trace-leaks",
+        "build": "deno run -A build.ts",
+        "deploy": "deno task build && deno task rsync",
+        "watch": "watchexec -w src -- deno run -A build.ts"
     },
     "imports": {
         "@avroit/memcached": "jsr:@avroit/memcached@^0.0.4",
