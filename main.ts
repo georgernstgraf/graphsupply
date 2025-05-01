@@ -51,10 +51,29 @@ const app = new Hono<{
         mySessionMiddleware,
     )
     .use("*", helpers.finalLogger);
-app.get("/", serveStatic({ path: "./static/index.html" }));
-app.get("", serveStatic({ path: "./static/index.html" }));
+app.get(
+    "/",
+    async (c, next) => {
+        c.res.headers.set("Content-Type", "text/html;charset=UTF-8");
+        console.log("SLASH " + c.req.path);
+        return await next();
+    },
+    serveStatic({
+        path: "./static/index.html",
+    }),
+);
+app.get("", async (c, next) => {
+    c.res.headers.set("Content-Type", "text/html;charset=UTF-8");
+    console.log("EMPTY " + c.req.path);
+    return await next();
+}, serveStatic({ path: "./static/index.html" }));
 app.get("/list", helpers.rootHandler);
-app.get("/favicon.ico", serveStatic({ path: "./static/favicon.ico" }));
+
+app.get("/favicon.ico", async (c, next) => {
+    c.res.headers.set("Content-Type", "image/x-icon");
+    console.log("EMPTY " + c.req.path);
+    return await next();
+}, serveStatic({ path: "./static/favicon.ico" }));
 app.get(`/andy-json-originals`, async (c) => {
     const files = [];
     try {
@@ -343,6 +362,35 @@ app.get(
             console.log(`${_path} NOT found, you access ${c.req.path}`);
         },
         onFound: (_path, c) => {
+            // Set Content-Type explicitly based on file extension
+            const ext = _path.split(".").pop()?.toLowerCase();
+            if (ext && c.res) {
+                const mimeTypes = {
+                    "json": "application/json",
+                    "csv": "text/csv",
+                    "txt": "text/plain",
+                    "html": "text/html",
+                    "css": "text/css",
+                    "js": "text/javascript",
+                    "map": "application/json",
+                    "woff": "font/woff",
+                    "woff2": "font/woff2",
+                    "ttf": "font/ttf",
+                    "png": "image/png",
+                    "jpg": "image/jpeg",
+                    "jpeg": "image/jpeg",
+                    "gif": "image/gif",
+                    "svg": "image/svg+xml",
+                    "ico": "image/x-icon",
+                };
+
+                if (ext in mimeTypes) {
+                    c.res.headers.set(
+                        "Content-Type",
+                        mimeTypes[ext as keyof typeof mimeTypes],
+                    );
+                }
+            }
             console.log(`${_path} FOUND, you access ${c.req.path}`);
         },
         rewriteRequestPath: (path) => {

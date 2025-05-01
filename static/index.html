@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
+    <link rel="icon"
+          href="favicon.ico"
+          type="image/x-icon">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
@@ -36,14 +40,16 @@
                     <input type="number"
                            min="2"
                            max="200"
-                           value="10">
+                           value="10"
+                           id="in-nodes">
                     Choose desired number of nodes
                 </label>
                 <label class="form-label d-flex gap-3 align-items-center justify-content-between border-top mb-0 pt-1 px-1">Density (%):
                     <input type="number"
                            min="0"
                            max="100"
-                           value="50">
+                           value="50"
+                           id="in-density">
                     Probability that any edge will be created
                 </label>
                 <label class="form-check-label d-flex gap-3 align-items-center justify-content-between border-top mb-0 pt-1 px-1">Directed:
