@@ -348,7 +348,7 @@ app.get("/last-json", (c) => {
     c.header("Content-Type", "application/json");
     const formattedJson = "[\n  " +
         last.matrix.map((row) => JSON.stringify(row)).join(",\n  ") +
-        "\n]";
+        "\n]\n";
     return c.text(formattedJson);
 });
 app.get("/last-csv", (c) => {
@@ -357,7 +357,7 @@ app.get("/last-csv", (c) => {
         return c.text("No last graph found", 404);
     }
     const matrix = last.matrix;
-    const lines = matrix.map((row) => row.join(";")).join("\n");
+    const lines = matrix.map((row) => row.join(";")).join("\n") + "\n";
     const filename = `graph-${nowstr()}.csv`;
     c.header("Content-Disposition", `attachment; filename="${filename}"`);
     c.header("Content-Type", "text/csv");
