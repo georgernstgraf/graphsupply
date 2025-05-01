@@ -2,6 +2,10 @@ GET http://localhost:8888/graphsupply/
 ###
 GET http://localhost:8888/graphsupply/last
 ###
+GET http://localhost:8888/graphsupply/static/urxn.txt
+###
+GET http://localhost:8888/graphsupply/static/bundle.js
+###
 GET http://localhost:8888/graphsupply/favicon.ico
 ###
 POST http://localhost:8888/graphsupply/random

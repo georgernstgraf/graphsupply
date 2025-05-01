@@ -8,19 +8,6 @@ export async function finalLogger(c: Context, next: () => Promise<void>) {
         } ${c.res.status} ${c.req.method} ${c.req.path}`,
     );
 }
-export async function indexHandler(c: Context) {
-    if (!c.req.path.endsWith("/")) {
-        const url = new URL(c.req.url);
-        url.pathname = c.req.path + "/";
-        return c.redirect(url.toString(), 308); // 308: Permanent Redirect
-    }
-    return c.html(await Deno.readTextFile("static/index.html"));
-}
-export async function favIconHandler(c: Context) {
-    const favicon = await Deno.readFile("static/favicon.ico");
-    c.header("Content-Type", "image/x-icon");
-    return c.body(favicon);
-}
 export async function rootHandler(c: Context) {
     const dirs = [];
     try {

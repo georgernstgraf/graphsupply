@@ -12,6 +12,7 @@
     "jsr:@std/jsonc@0.213": "0.213.1",
     "jsr:@std/path@0.213": "0.213.1",
     "npm:@apidevtools/swagger-cli@*": "4.0.4",
+    "npm:create-hono@*": "0.14.3",
     "npm:create-hono@latest": "0.14.3",
     "npm:esbuild@*": "0.25.2",
     "npm:esbuild@0.20": "0.20.2",

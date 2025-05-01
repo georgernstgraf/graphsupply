@@ -1,6 +1,7 @@
 import { assert } from "@std/assert";
-import { Hono } from "@hono/hono";
-import { cors } from "@hono/hono/cors";
+import { Hono } from "@hono";
+import { serveStatic } from "@hono/deno";
+import { cors } from "@hono/cors";
 import { MemoryStore, Session, sessionMiddleware } from "@jcs224/hono-sessions";
 // local imports
 import * as helpers from "./libbe/helpers.ts";
@@ -26,7 +27,7 @@ interface AndyEdge {
 type SessionDataTypes = {
     "graph": graphJson;
 };
-const middleware = sessionMiddleware({
+const mySessionMiddleware = sessionMiddleware({
     encryptionKey: config.secret,
     sessionCookieName: "graphsupply_session",
     cookieOptions: {
@@ -47,13 +48,13 @@ const app = new Hono<{
     .use(
         "*",
         // @ts-ignore: bin zu deppat
-        middleware,
+        mySessionMiddleware,
     )
     .use("*", helpers.finalLogger);
-app.get("/", helpers.indexHandler);
-app.get("", helpers.indexHandler);
-app.get("/favicon.ico", helpers.favIconHandler);
+app.get("/", serveStatic({ path: "./static/index.html" }));
+app.get("", serveStatic({ path: "./static/index.html" }));
 app.get("/list", helpers.rootHandler);
+app.get("/favicon.ico", serveStatic({ path: "./static/favicon.ico" }));
 app.get(`/andy-json-originals`, async (c) => {
     const files = [];
     try {
@@ -334,6 +335,25 @@ app.get("/last-csv", (c) => {
     c.header("Content-Length", lines.length.toString());
     return c.text(lines);
 });
+app.get(
+    "/static/*",
+    serveStatic({
+        root: "./static/",
+        onNotFound: (_path, c) => {
+            console.log(`${_path} NOT found, you access ${c.req.path}`);
+        },
+        onFound: (_path, c) => {
+            console.log(`${_path} FOUND, you access ${c.req.path}`);
+        },
+        rewriteRequestPath: (path) => {
+            const rv = path.replace(/^\/graphsupply\/static\//, "");
+            console.log(
+                `rewriting ${path} to ${rv}, you access ${path}`,
+            );
+            return rv;
+        },
+    }),
+);
 function nowstr() {
     const date = new Date();
     return [
