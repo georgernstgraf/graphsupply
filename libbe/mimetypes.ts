@@ -1,0 +1,18 @@
+export const mimeTypes = {
+    "json": "application/json",
+    "csv": "text/csv",
+    "txt": "text/plain",
+    "html": "text/html",
+    "css": "text/css",
+    "js": "text/javascript",
+    "map": "application/json",
+    "woff": "font/woff",
+    "woff2": "font/woff2",
+    "ttf": "font/ttf",
+    "png": "image/png",
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+    "gif": "image/gif",
+    "svg": "image/svg+xml",
+    "ico": "image/x-icon",
+};

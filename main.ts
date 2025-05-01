@@ -7,6 +7,7 @@ import { MemoryStore, Session, sessionMiddleware } from "@jcs224/hono-sessions";
 import * as helpers from "./libbe/helpers.ts";
 import { config } from "./libbe/config.ts";
 import { graphJson } from "./libbe/types.ts";
+import { mimeTypes } from "./libbe/mimetypes.ts";
 
 config.baseUrl = Deno.env.get("BASE_URL") || "http://localhost:8080";
 config.prefix = Deno.env.get("PREFIX") || "/";
@@ -365,25 +366,6 @@ app.get(
             // Set Content-Type explicitly based on file extension
             const ext = _path.split(".").pop()?.toLowerCase();
             if (ext && c.res) {
-                const mimeTypes = {
-                    "json": "application/json",
-                    "csv": "text/csv",
-                    "txt": "text/plain",
-                    "html": "text/html",
-                    "css": "text/css",
-                    "js": "text/javascript",
-                    "map": "application/json",
-                    "woff": "font/woff",
-                    "woff2": "font/woff2",
-                    "ttf": "font/ttf",
-                    "png": "image/png",
-                    "jpg": "image/jpeg",
-                    "jpeg": "image/jpeg",
-                    "gif": "image/gif",
-                    "svg": "image/svg+xml",
-                    "ico": "image/x-icon",
-                };
-
                 if (ext in mimeTypes) {
                     c.res.headers.set(
                         "Content-Type",
