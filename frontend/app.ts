@@ -11,11 +11,11 @@ export class App {
     wish_config: Record<string, number | boolean> = {};
     graph_json: null | SupplyJson = null;
     constructor() {
-        console.log("App initialized");
+        //console.log("App initialized");
         this.init();
     }
     init() { // Registering Dom Nodes and putting event listeners on them
-        console.log("init called");
+        //console.log("init called");
         this.dom_nodes["in_density"] = document.getElementById("in-density");
         this.dom_nodes["in_directed"] = document.getElementById("in-directed");
         this.dom_nodes["in_weighted"] = document.getElementById("in-weighted");
@@ -26,10 +26,10 @@ export class App {
         this.dom_nodes["bu_load"] = document.getElementById("bu-load");
         this.dom_nodes["bu_load"]?.addEventListener("click", async () => {
             this.poulate_wish_config();
-            console.log(
-                "init done, dom nodes",
-                this.dom_nodes,
-            );
+            //console.log(
+            //    "init done, dom nodes",
+            //    this.dom_nodes,
+            //);
             try {
                 const response = await fetch("random", {
                     method: "POST",
@@ -45,12 +45,12 @@ export class App {
             } catch (error) {
                 console.error("Error fetching random graph:", error);
             }
-            console.log("Graph JSON", this.graph_json);
+            //console.log("Graph JSON", this.graph_json);
             this.paint_graph(this.graph_json);
         });
     }
     poulate_wish_config() { // Update the wish config based on the dom nodes
-        console.log("update_wish_config called");
+        //console.log("update_wish_config called");
         this.wish_config["density"] =
             (this.dom_nodes["in_density"] as HTMLInputElement).valueAsNumber;
         this.wish_config["directed"] =
@@ -61,7 +61,7 @@ export class App {
             (this.dom_nodes["in_loops"] as HTMLInputElement).checked;
         this.wish_config["nodes"] =
             (this.dom_nodes["in_nodes"] as HTMLInputElement).valueAsNumber;
-        console.log("wish_config updated", this.wish_config);
+        //console.log("wish_config updated", this.wish_config);
     }
     static json_add_named_nodes(json: SupplyJson) {
         // letters or numbers depending on matrix.length
@@ -80,8 +80,9 @@ export class App {
         }
         json.node_names = letters;
     }
-    static createId(a: string, b: string): string {
-        return a < b ? `${a}|${b}` : `${b}|${a}`;
+    static createId(a: string, b: string, directed: boolean): string {
+        //console.info(`createId: x = ${a}, y = ${b}`);
+        return directed ? `${a}|${b}` : a < b ? `${a}|${b}` : `${b}|${a}`;
     }
 
     paint_graph(json: SupplyJson | null) {
@@ -113,7 +114,7 @@ export class App {
                 if (json.matrix[row][col] > 0) {
                     elements.edges.push({
                         data: {
-                            id: App.createId(names[row], names[col]),
+                            id: App.createId(names[row], names[col], directed),
                             source: names[row],
                             target: names[col],
                             weight: json.matrix[row][col], // number, 1 or weight

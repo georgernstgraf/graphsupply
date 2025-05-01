@@ -6,7 +6,7 @@ export function cytoFactory(
     weighted: boolean,
     directed: boolean,
 ) {
-    console.log("cytofactory got elements:", elements);
+    //console.log("cytofactory got elements:", elements);
     const options = optionFactory(elements, weighted, directed);
     return cy_window_instance(options);
 }
@@ -76,7 +76,7 @@ function optionFactory(
                 },
             },
             {
-                selector: "edge[source=target]",
+                selector: "edge:loop",
                 style: {
                     "curve-style": "bezier",
                     "control-point-step-size": 7,
