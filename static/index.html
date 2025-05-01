@@ -26,13 +26,13 @@
     <title>Graphsupply</title>
 </head>
 
-<body>
-    <main class="container-fluid d-flex mt-2">
-        <div class="d-flex flex-column gap-3 w-25 ms-3">
+<body class="m-0 p-0">
+    <main class="container-fluid d-flex mt-2 justify-content-center">
+        <div class="d-flex flex-column gap-3 w-25 mx-3 justify-content-center">
 
             <h1 class="text-center">Graphsupply</h1>
             <form id="graph-config"
-                  class="border d-flex flex-column gap-1 p-1 rounded-2">
+                  class="border d-flex flex-column gap-1 pt-1 px-1 rounded-2">
                 <h3 class="my-1 text-center">Configure your wish-graph</h3>
                 <!--
                 "directed": "Ob der Graph gerichtet sein soll (boolean, default: false)",
@@ -44,7 +44,7 @@
                     <input type="number"
                            min="2"
                            max="200"
-                           value="10"
+                           value="7"
                            id="in-nodes">
                     Choose desired number of nodes
                 </label>
@@ -52,7 +52,7 @@
                     <input type="number"
                            min="0"
                            max="100"
-                           value="50"
+                           value="54"
                            id="in-density">
                     Probability that any edge will be created
                 </label>
@@ -74,27 +74,27 @@
                            id="in-loops">
                     allow self-loops; uncheck for a simple graph
                 </label>
-                <div class="border-top mb-0 pt-1 px-1 d-flex gap-3 align-items-center justify-content-between">
+                <div class="border-top mb-0 py-2 px-1 d-flex gap-3 align-items-center justify-content-between">
                     <div class="btn-group"
                          role="group">
 
                         <a id="bu-dl-json"
-                           class="btn btn-outline-secondary"
+                           class="btn btn-outline-light"
                            href="last-json">dl json</a>
                         <a id="bu-dl-csv"
-                           class="btn btn-outline-secondary"
+                           class="btn btn-outline-light"
                            href="last-csv">dl csv</a>
                     </div><button type="button"
                             id="bu-load"
-                            class="btn btn-outline-secondary">Load</button>
+                            class="btn btn-outline-light">Load</button>
                 </div>
 
             </form>
 
         </div>
         <div id="cy-canvas"
-             class="w-100"
-             style="height: 100vh;"></div>
+             class="border border-1 rounded-2"
+             style="height: 97vh; aspect-ratio: 1;"></div>
     </main>
 </body>
 
