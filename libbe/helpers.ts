@@ -85,7 +85,7 @@ export function isQuadraticNumberArray(
     return [true, ""];
 }
 
-export function random(c: Context, queryParams: Record<string, unknown>) {
+export function random(c: Context, queryParams: Record<string, string>) {
     const understood_params = {
         "density": "0-100% (number, default: 50)",
         "nodes": "Desired number of nodes 2-200 (number, default: 10)",
@@ -121,7 +121,7 @@ export function random(c: Context, queryParams: Record<string, unknown>) {
         return random < density;
     };
     const rndWeight = () => {
-        return Math.floor(Math.random() * nodes + 1);
+        return Math.floor(Math.random() * nodes * 1.6 + 1);
     };
     // do all rows
     for (let row = 0; row < nodes; row++) {
