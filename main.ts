@@ -34,14 +34,16 @@ const mySessionMiddleware = sessionMiddleware({
     cookieOptions: {
         httpOnly: true,
         secure: false,
-        maxAge: 87000,
+        maxAge: 3600 * 24,
         path: "/",
+        sameSite: "lax",
     },
     store: new MemoryStore(),
+    expireAfterSeconds: 3600 * 24,
 });
-const app = new Hono<{
+const app = new Hono<{ // nur zu Typezwecken
     Variables: {
-        session: Session<SessionDataTypes>;
+        session: Session;
     };
 }>()
     .basePath(config.prefix)
@@ -339,7 +341,7 @@ app.get("/random", (c) => {
     return helpers.random(c, params);
 });
 app.get("/last-json", (c) => {
-    const last = c.get("session").get("graph");
+    const last: graphJson = c.get("session").get("graph");
     if (!last) {
         return c.text("No last graph found", 404);
     }
