@@ -340,7 +340,16 @@ app.get("/random", (c) => {
 });
 app.get("/last-json", (c) => {
     const last = c.get("session").get("graph");
-    return c.json(last);
+    if (!last) {
+        return c.text("No last graph found", 404);
+    }
+    const filename = `graph-${nowstr()}.json`;
+    c.header("Content-Disposition", `attachment; filename="${filename}"`);
+    c.header("Content-Type", "application/json");
+    const formattedJson = "[\n  " +
+        last.matrix.map((row) => JSON.stringify(row)).join(",\n  ") +
+        "\n]";
+    return c.text(formattedJson);
 });
 app.get("/last-csv", (c) => {
     const last: graphJson = c.get("session").get("graph")!;
