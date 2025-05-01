@@ -1,11 +1,11 @@
 import { assert } from "@std/assert";
 import { Hono } from "@hono/hono";
 import { cors } from "@hono/hono/cors";
-import session from "hono-session";
+import { MemoryStore, Session, sessionMiddleware } from "@jcs224/hono-sessions";
 // local imports
 import * as helpers from "./libbe/helpers.ts";
 import { config } from "./libbe/config.ts";
-import { store } from "./libbe/memcached.ts";
+import { graphJson } from "./libbe/types.ts";
 
 config.baseUrl = Deno.env.get("BASE_URL") || "http://localhost:8080";
 config.prefix = Deno.env.get("PREFIX") || "/";
@@ -14,6 +14,7 @@ config.listenHost = Deno.env.get("LISTEN_HOST") || "127.0.0.1";
 config.listenPort = Number(Deno.env.get("LISTEN_PORT")) || 8080;
 config.adjacencySimple = "adjacency-simple";
 config.adjacencyWeighted = "adjacency-weighted";
+config.secret = Deno.env.get("SECRET");
 
 interface AndyNode {
     id: number;
@@ -22,28 +23,33 @@ interface AndyEdge {
     n1: AndyNode;
     n2: AndyNode;
 }
-
-const app = new Hono().basePath(config.prefix);
-app.use(
-    "*",
-    session({
-        store: new Map(),
-        cookieOptions: {
-            httpOnly: true,
-            secure: false,
-            maxAge: 87000,
-            path: "/",
-        },
-        existsCookieOptions: {
-            secure: false,
-            httpOnly: false,
-            path: "/",
-        },
-    }),
-);
-app.use("*", cors());
-app.use("*", helpers.finalLogger);
-
+type SessionDataTypes = {
+    "graph": graphJson;
+};
+const middleware = sessionMiddleware({
+    encryptionKey: config.secret,
+    sessionCookieName: "graphsupply_session",
+    cookieOptions: {
+        httpOnly: true,
+        secure: false,
+        maxAge: 87000,
+        path: "/",
+    },
+    store: new MemoryStore(),
+});
+const app = new Hono<{
+    Variables: {
+        session: Session<SessionDataTypes>;
+    };
+}>()
+    .basePath(config.prefix)
+    .use("*", cors())
+    .use(
+        "*",
+        // @ts-ignore: bin zu deppat
+        middleware,
+    )
+    .use("*", helpers.finalLogger);
 app.get("/", helpers.indexHandler);
 app.get("", helpers.indexHandler);
 app.get("/favicon.ico", helpers.favIconHandler);
@@ -311,19 +317,22 @@ app.get("/random", (c) => {
     const params = c.req.query();
     return helpers.random(c, params);
 });
-//app.get("/last", (c) => {
-//    const last = c.session.get("last") || "nothing";
-//    return c.json({ last });
-//});
-app.get("/login", (c) => {
-    if (!c.session.last) {
-        c.session.last = nowstr();
+app.get("/last-json", (c) => {
+    const last = c.get("session").get("graph");
+    return c.json(last);
+});
+app.get("/last-csv", (c) => {
+    const last: graphJson = c.get("session").get("graph")!;
+    if (!last) {
+        return c.text("No last graph found", 404);
     }
-    return c.json({
-        last: c.session.last,
-        now: nowstr(),
-        json: c.session.json,
-    });
+    const matrix = last.matrix;
+    const lines = matrix.map((row) => row.join(";")).join("\n");
+    const filename = `graph-${nowstr()}.csv`;
+    c.header("Content-Disposition", `attachment; filename="${filename}"`);
+    c.header("Content-Type", "text/csv");
+    c.header("Content-Length", lines.length.toString());
+    return c.text(lines);
 });
 function nowstr() {
     const date = new Date();

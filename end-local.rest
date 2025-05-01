@@ -1,13 +1,13 @@
 GET http://localhost:8888/graphsupply/
 ###
-GET http://localhost:8888/graphsupply/login
+GET http://localhost:8888/graphsupply/last
 ###
 GET http://localhost:8888/graphsupply/favicon.ico
 ###
 POST http://localhost:8888/graphsupply/random
 Content-Type: application/json
 
-{"density": 80, "nodes": 30, "weighted": true}
+{"density": 80, "nodes": 5, "weighted": true}
 ###
 POST http://localhost:8888/graphsupply/random
 Content-Type: application/json

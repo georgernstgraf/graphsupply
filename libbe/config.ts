@@ -6,6 +6,7 @@ interface Config {
     listenPort?: number;
     adjacencySimple?: string;
     adjacencyWeighted?: string;
+    secret?: string;
 }
 
 export const config: Config = {};

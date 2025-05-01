@@ -1,41 +1,33 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@avroit/memcached@^0.0.4": "0.0.4",
-    "jsr:@hono/hono@*": "4.7.6",
-    "jsr:@hono/hono@^4.7.6": "4.7.6",
+    "jsr:@hono/hono@*": "4.7.8",
+    "jsr:@hono/hono@^4.7.8": "4.7.8",
     "jsr:@jcs224/hono-sessions@~0.7.2": "0.7.2",
     "jsr:@luca/esbuild-deno-loader@0.10": "0.10.3",
     "jsr:@std/assert@1": "1.0.12",
     "jsr:@std/assert@~0.213.1": "0.213.1",
-    "jsr:@std/bytes@^1.0.5": "1.0.5",
-    "jsr:@std/crypto@^1.0.4": "1.0.4",
     "jsr:@std/encoding@0.213": "0.213.1",
     "jsr:@std/internal@^1.0.6": "1.0.6",
     "jsr:@std/jsonc@0.213": "0.213.1",
     "jsr:@std/path@0.213": "0.213.1",
-    "jsr:@std/uuid@^1.0.7": "1.0.7",
-    "jsr:@vef/deno-memcached@~0.1.1": "0.1.1",
     "npm:@apidevtools/swagger-cli@*": "4.0.4",
     "npm:create-hono@latest": "0.14.3",
     "npm:esbuild@*": "0.25.2",
     "npm:esbuild@0.20": "0.20.2",
-    "npm:hono-session@^1.2.0": "1.2.0",
-    "npm:hono@4": "4.7.7",
+    "npm:hono@4": "4.7.8",
+    "npm:hono@^4.7.8": "4.7.8",
     "npm:iron-webcrypto@^1.2.1": "1.2.1",
     "npm:neverthrow@*": "8.2.0"
   },
   "jsr": {
-    "@avroit/memcached@0.0.4": {
-      "integrity": "9a0d3ce5f27f48e0ee53e0a84008ccd8b4ea9c9a258704a70a9d5a38a303cd80"
-    },
-    "@hono/hono@4.7.6": {
-      "integrity": "407da752c13d4644bb9d363f8349db7542e21abc3db8c13ca90cf69d8ab675ad"
+    "@hono/hono@4.7.8": {
+      "integrity": "620b1eaab065196d4ebe02cff31f8d3a78c94f736ce2ca86ee14f5f26fe48ecd"
     },
     "@jcs224/hono-sessions@0.7.2": {
       "integrity": "d68311491b514e0947495de4bd0b0542b3f299bc25acdf30c2e0f953d71ab58a",
       "dependencies": [
-        "npm:hono",
+        "npm:hono@4",
         "npm:iron-webcrypto"
       ]
     },
@@ -56,12 +48,6 @@
         "jsr:@std/internal"
       ]
     },
-    "@std/bytes@1.0.5": {
-      "integrity": "4465dd739d7963d964c809202ebea6d5c6b8e3829ef25c6a224290fbb8a1021e"
-    },
-    "@std/crypto@1.0.4": {
-      "integrity": "cee245c453bd5366207f4d8aa25ea3e9c86cecad2be3fefcaa6cb17203d79340"
-    },
     "@std/encoding@0.213.1": {
       "integrity": "fcbb6928713dde941a18ca5db88ca1544d0755ec8fb20fe61e2dc8144b390c62"
     },
@@ -79,16 +65,6 @@
       "dependencies": [
         "jsr:@std/assert@~0.213.1"
       ]
-    },
-    "@std/uuid@1.0.7": {
-      "integrity": "6885db5cd60794049d1661b5cf06b1e1ed65b2affd054ec8b06da7d2efd421ca",
-      "dependencies": [
-        "jsr:@std/bytes",
-        "jsr:@std/crypto"
-      ]
-    },
-    "@vef/deno-memcached@0.1.1": {
-      "integrity": "1da57c84234027c7b5305143255ba6adf84fc07529586b95da02193f54952aa1"
     }
   },
   "npm": {
@@ -347,12 +323,6 @@
     "create-hono@0.14.3": {
       "integrity": "sha512-CuZJAj6dmqAwmTdPM5iFl5vQAD5at6aBKnEaiP5zUYNuiInMtalSXDrMj79lmcdJD/hXNsQf14upMx2se7ZVxA=="
     },
-    "debug@4.4.0": {
-      "integrity": "sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==",
-      "dependencies": [
-        "ms"
-      ]
-    },
     "decamelize@1.2.0": {
       "integrity": "sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA=="
     },
@@ -439,16 +409,8 @@
     "has-flag@4.0.0": {
       "integrity": "sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ=="
     },
-    "hono-session@1.2.0": {
-      "integrity": "sha512-shkN6UgMt9RyJwXbY+tVQP7THkWCYMP2YP6jNNVIEu718dY9MWZBTqjvbh4C/n8c/yjcjRIIDLeWUdrtODAGow==",
-      "dependencies": [
-        "debug",
-        "hono",
-        "iron-webcrypto"
-      ]
-    },
-    "hono@4.7.7": {
-      "integrity": "sha512-2PCpQRbN87Crty8/L/7akZN3UyZIAopSoRxCwRbJgUuV1+MHNFHzYFxZTg4v/03cXUm+jce/qa2VSBZpKBm3Qw=="
+    "hono@4.7.8": {
+      "integrity": "sha512-PCibtFdxa7/Ldud9yddl1G81GjYaeMYYTq4ywSaNsYbB1Lug4mwtOMJf2WXykL0pntYwmpRJeOI3NmoDgD+Jxw=="
     },
     "iron-webcrypto@1.2.1": {
       "integrity": "sha512-feOM6FaSr6rEABp/eDfVseKyTMDt+KGpeB35SkVn9Tyn0CqvVsY3EwI0v5i8nMHyJnzCIQf7nsy3p41TPkJZhg=="
@@ -477,9 +439,6 @@
       "dependencies": [
         "p-locate"
       ]
-    },
-    "ms@2.1.3": {
-      "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
     },
     "neverthrow@8.2.0": {
       "integrity": "sha512-kOCT/1MCPAxY5iUV3wytNFUMUolzuwd/VF/1KCx7kf6CutrOsTie+84zTGTpgQycjvfLdBBdvBvFLqFD2c0wkQ==",
@@ -583,13 +542,9 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@avroit/memcached@^0.0.4",
-      "jsr:@hono/hono@^4.7.6",
+      "jsr:@hono/hono@^4.7.8",
       "jsr:@jcs224/hono-sessions@~0.7.2",
-      "jsr:@std/assert@1",
-      "jsr:@std/uuid@^1.0.7",
-      "jsr:@vef/deno-memcached@~0.1.1",
-      "npm:hono-session@^1.2.0"
+      "jsr:@std/assert@1"
     ]
   }
 }

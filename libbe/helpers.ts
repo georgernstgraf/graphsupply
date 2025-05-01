@@ -21,7 +21,6 @@ export async function favIconHandler(c: Context) {
     c.header("Content-Type", "image/x-icon");
     return c.body(favicon);
 }
-export type json = { matrix: number[][] } | string[];
 export async function rootHandler(c: Context) {
     const dirs = [];
     try {
@@ -176,7 +175,7 @@ export function random(c: Context, queryParams: Record<string, unknown>) {
         },
         matrix,
     };
-    const sess = c.session;
-    sess.json = fullJson;
+    const sess = c.get("session");
+    sess.set("graph", fullJson);
     return c.json(fullJson);
 }
