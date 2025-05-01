@@ -1,4 +1,4 @@
-import { cytoFactory } from "./cyto.ts";
+import { cytoFactory } from "./cytofactory.ts";
 import { Core, ElementsDefinition } from "cytoscape";
 import { SupplyJson } from "./types.ts";
 declare global {
@@ -93,24 +93,31 @@ export class App {
             App.json_add_named_nodes(json);
         }
         const names = json.node_names!;
+
         const elements: ElementsDefinition = { nodes: [], edges: [] };
         // Create nodes first
         for (const name of names) {
             elements.nodes.push({ data: { id: name, label: name } });
         }
         // Create edges
-        for (let row = 0; row < names.length; row++) {
-            for (let col = row + 1; col < names.length; col++) { // only upper right triangle
+        const weighted = json.metadata.params.weighted;
+        const directed = json.metadata.params.directed;
+
+        for (let row = 0; row < names.length; row++) { // All rows in any case
+            // problem is: the undirected graph has 2 symmetric edges in the matrix,
+            // which we do not want to create here
+
+            // if it has loops, it must be wanted that we display them.
+
+            for (let col = directed ? 0 : row; col < names.length; col++) { // only upper right triangle
                 if (json.matrix[row][col] > 0) {
                     elements.edges.push({
                         data: {
                             id: App.createId(names[row], names[col]),
                             source: names[row],
                             target: names[col],
-                            weight: json.matrix[row][col], // number!!
-                            label: String(
-                                json.matrix[row][col],
-                            ),
+                            weight: json.matrix[row][col], // number, 1 or weight
+                            label: json.matrix[row][col],
                         },
                     });
                 }
@@ -119,7 +126,7 @@ export class App {
         if (globalThis.cy) {
             globalThis.cy.destroy();
         }
-        const cy = cytoFactory(elements);
+        const cy = cytoFactory(elements, weighted, directed);
         globalThis.cy = cy;
         this.cy = cy;
     }
