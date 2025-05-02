@@ -11,11 +11,9 @@ export class App {
     wish_config: Record<string, number | boolean> = {};
     graph_json: null | SupplyJson = null;
     constructor() {
-        //console.log("App initialized");
         this.init();
     }
-    init() { // Registering Dom Nodes and putting event listeners on them
-        //console.log("init called");
+    init() {
         this.dom_nodes["in_density"] = document.getElementById("in-density");
         this.dom_nodes["in_directed"] = document.getElementById("in-directed");
         this.dom_nodes["in_weighted"] = document.getElementById("in-weighted");
@@ -26,10 +24,6 @@ export class App {
         this.dom_nodes["bu_load"] = document.getElementById("bu-load");
         this.dom_nodes["bu_load"]?.addEventListener("click", async () => {
             this.poulate_wish_config();
-            //console.log(
-            //    "init done, dom nodes",
-            //    this.dom_nodes,
-            //);
             try {
                 const response = await fetch("random", {
                     method: "POST",
@@ -45,12 +39,31 @@ export class App {
             } catch (error) {
                 console.error("Error fetching random graph:", error);
             }
-            //console.log("Graph JSON", this.graph_json);
             this.paint_graph(this.graph_json);
         });
+        this.dom_nodes["bu_dl_svg"] = document.getElementById("bu-dl-svg");
+        this.dom_nodes["bu_dl_svg"]?.addEventListener("click", (e) => {
+            e.preventDefault();
+            const cy = globalThis.cy;
+            // @ts-ignore does not export types
+            const svgContent = cy.svg({
+                scale: 2,
+                full: true,
+                bg: "#fff",
+            }) as string;
+
+            const blob = new Blob([svgContent], { type: "image/svg+xml" });
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = url;
+            downloadLink.download = `graph-${App.nowstr()}.svg`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(url);
+        });
     }
-    poulate_wish_config() { // Update the wish config based on the dom nodes
-        //console.log("update_wish_config called");
+    poulate_wish_config() {
         this.wish_config["density"] =
             (this.dom_nodes["in_density"] as HTMLInputElement).valueAsNumber;
         this.wish_config["directed"] =
@@ -61,8 +74,8 @@ export class App {
             (this.dom_nodes["in_loops"] as HTMLInputElement).checked;
         this.wish_config["nodes"] =
             (this.dom_nodes["in_nodes"] as HTMLInputElement).valueAsNumber;
-        //console.log("wish_config updated", this.wish_config);
     }
+
     static json_add_named_nodes(json: SupplyJson) {
         // letters or numbers depending on matrix.length
         let letters;
@@ -83,6 +96,14 @@ export class App {
     static createId(a: string, b: string, directed: boolean): string {
         //console.info(`createId: x = ${a}, y = ${b}`);
         return directed ? `${a}|${b}` : a < b ? `${a}|${b}` : `${b}|${a}`;
+    }
+    static nowstr() {
+        const date = new Date();
+        return [
+            date.getHours().toString().padStart(2, "0"),
+            date.getMinutes().toString().padStart(2, "0"),
+            date.getSeconds().toString().padStart(2, "0"),
+        ].join(":");
     }
 
     paint_graph(json: SupplyJson | null) {
