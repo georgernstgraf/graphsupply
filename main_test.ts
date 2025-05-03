@@ -1,6 +1,6 @@
 import { fail } from "@std/assert/fail";
 import * as NT from "npm:neverthrow";
-import * as helpers from "./libbe/helpers.ts";
+import { graphJson } from "./libbe/types.ts";
 
 const crawled = new Set<string>();
 
@@ -33,7 +33,7 @@ async function crawl(baseUrl: string): Promise<void> {
         await crawl(url);
     });
 }
-async function getJson(url: string): Promise<NT.Result<helpers.json, Error>> {
+async function getJson(url: string): Promise<NT.Result<graphJson, Error>> {
     try {
         const response = await fetch(url);
         if (!response.ok) {
