@@ -30,18 +30,13 @@
       style="height: calc(100dvh - 0.5rem);">
     <main class="container-fluid d-flex mt-2 gap-3  justify-content-around"
           style="height: calc(100% - 0.5rem);">
-        <div class="d-flex flex-column gap-2 w-25 mx-3 overflow-auto"
+        <!--controls-->
+        <div class="d-flex flex-column gap-2 w-25  overflow-auto"
              style="max-height: 100%;">
-            <div class="d-flex flex-column gap-2 my-auto">
-                <h1 class="text-center">Graphsupply</h1>
+            <div class="d-flex flex-column gap-2 my-auto  border border-1 rounded-2 py-1">
+                <h2 class="text-center mt-2">Graphsupply</h2>
                 <form id="graph-config"
-                      class="border d-flex flex-column gap-1 pt-1 px-1 rounded-2">
-                    <h3 class="my-1 text-center">Configure your wish-graph</h3>
-                    <!--
-                "directed": "Ob der Graph gerichtet sein soll (boolean, default: false)",
-                "weighted": "Ob der Graph gewichtet sein soll für Dijkstra (boolean, default: false)",
-                "loops": "Schlingen? (boolean, default: false)"
--->
+                      class="d-flex flex-column gap-1  px-1 ">
 
                     <label class="form-label d-flex gap-3 align-items-center justify-content-between border-top mb-0 pt-1 px-1">Nodes (2-200)
                         <input type="number"
@@ -97,7 +92,7 @@
             </div>
         </div>
         <div id="cy-canvas"
-             class="w-75 bg-body-secondary mb-2 border border-1 rounded-2"></div>
+             class="w-75 border border-1 rounded-2"></div>
     </main>
 </body>
 
