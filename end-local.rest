@@ -10,8 +10,6 @@ GET http://localhost:8888/graphsupply/static/johndoe.png
 ###
 GET http://localhost:8888/graphsupply/static/css.css
 ###
-GET http://localhost:8888/graphsupply/favicon.ico
-###
 POST http://localhost:8888/graphsupply/random
 Content-Type: application/json
 
