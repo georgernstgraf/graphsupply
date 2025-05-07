@@ -6,11 +6,6 @@ GET https://grafg1.spengergasse.at/graphsupply/andy-json-cooked/bsp_813.json
 POST http://localhost:8888/graphsupply/random
 Content-Type: application/json
 
-{"density": 80, "nodes": 30, "weighted": true}
-###
-POST http://localhost:8888/graphsupply/random
-Content-Type: application/json
-
 {"density": 50, "nodes": 7, "weighted": true}
 ###
 POST https://grafg1.spengergasse.at/graphsupply/random
