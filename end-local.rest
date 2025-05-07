@@ -10,6 +10,8 @@ GET http://localhost:8888/graphsupply/static/bundle.js.map
 ###
 GET http://localhost:8888/graphsupply/static/johndoe.png
 ###
+GET http://localhost:8888/graphsupply/static/css.css
+###
 POST http://localhost:8888/graphsupply/random
 Content-Type: application/json
 
