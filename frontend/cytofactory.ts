@@ -17,11 +17,11 @@ function get_edge_style(
 ): cytoscape.Css.Edge {
     return {
         "width": "0.2px",
-        "font-size": "4px",
-        "color": "#999",
+        "font-size": "7px",
+        "color": "#ccc",
         "label": weighted ? "data(label)" : "",
-        "line-color": "#999",
-        "target-arrow-color": "#999",
+        "line-color": "#ccc",
+        "target-arrow-color": "#ccc",
         "target-arrow-shape": directed ? "triangle" : "none", // "none", TODO
         "arrow-scale": 0.2,
         "curve-style": "bezier",
@@ -44,12 +44,12 @@ function optionFactory(
             {
                 selector: "node",
                 style: {
-                    "background-color": "#aaa",
+                    "background-color": "#ccc",
                     "label": "data(label)",
-                    "height": "5px",
-                    "width": "5px",
-                    "color": "#333",
-                    "font-size": "4px",
+                    "height": "9px",
+                    "width": "9px",
+                    "color": "#111",
+                    "font-size": "7px",
                     "text-halign": "center", // Center horizontally
                     "text-valign": "center", // Center vertically
                     "text-margin-y": 0, // No vertical margin
