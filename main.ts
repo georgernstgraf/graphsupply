@@ -1,7 +1,7 @@
 import { assert } from "@std/assert";
-import { Hono } from "@hono";
-import { serveStatic } from "@hono/deno";
-import { cors } from "@hono/cors";
+import { Hono } from "@hono/hono";
+import { serveStatic } from "@hono/hono/deno";
+import { cors } from "@hono/hono/cors";
 import { MemoryStore, Session, sessionMiddleware } from "@jcs224/hono-sessions";
 // local imports
 import * as helpers from "./libbe/helpers.ts";
@@ -11,6 +11,8 @@ import { mimeTypes } from "./libbe/mimetypes.ts";
 
 config.baseUrl = Deno.env.get("BASE_URL") || "http://localhost:8080";
 config.prefix = Deno.env.get("PREFIX") || "/";
+assert(config.prefix.startsWith("/"));
+assert(config.prefix.length > 1 ? !config.prefix.endsWith("/") : true);
 config.baseUrlWithPrefix = `${config.baseUrl}${config.prefix}`;
 config.listenHost = Deno.env.get("LISTEN_HOST") || "127.0.0.1";
 config.listenPort = Number(Deno.env.get("LISTEN_PORT")) || 8080;
@@ -387,7 +389,10 @@ app.get(
             console.log(`${_path} FOUND, you access ${c.req.path}`);
         },
         rewriteRequestPath: (path) => {
-            const rv = path.replace(/^\/graphsupply\/static\//, "");
+            const rv = path.replace(
+                new RegExp(`^\\${config.prefix}\/static\/`),
+                "",
+            );
             console.log(
                 `rewriting ${path} to ${rv}, you access ${path}`,
             );

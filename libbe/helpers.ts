@@ -120,32 +120,48 @@ export function random(c: Context, queryParams: Record<string, string>) {
         const random = Math.random() * 100;
         return random < density;
     };
-    const rndWeight = () => {
-        return Math.floor(Math.random() * nodes * 1.6 + 1);
-    };
-    // do all rows
+    // do all rows; populate them with "1" for now
+    let edge_count = 0;
     for (let row = 0; row < nodes; row++) {
         // for inner loop directed comes into play, if so i do upper square
         // start with row if loops, otherwise row + 1
         // condition is right border
         for (
+            // the start is tricky and depends on "directed" and "loops"
             let column = directed ? 0 : row + (loops ? 0 : 1);
             column < nodes;
             column++
         ) { // do all columns
             if (row === column && !loops) continue; // keep main diagonal at 0
             if (!chosen()) continue;
-            matrix[row][column] = weighted ? rndWeight() : 1;
+            matrix[row][column] = 1;
+            edge_count++;
             if (!directed) { // ie symmetric
                 matrix[column][row] = matrix[row][column];
             }
         }
     }
-    const edges = matrix.reduce((acc, row) => {
-        return acc + row.reduce((inner_acc, value) => {
-            return inner_acc + (value !== 0 ? 1 : 0);
-        }, 0);
-    }, 0);
+    // set weights if needed
+    if (weighted) {
+        const weights = Array.from({ length: edge_count }, (_, i) => i + 1);
+        weights.sort((_) => Math.random() - 0.5);
+        for (let row = 0; row < nodes; row++) {
+            for (
+                // the start is tricky and depends on "directed" and "loops"
+                let column = directed ? 0 : row + (loops ? 0 : 1);
+                column < nodes;
+                column++
+            ) { // do all columns
+                if (row === column && !loops) continue; // keep main diagonal at 0
+                if (matrix[row][column] == 1) {
+                    matrix[row][column] = weights.pop() ?? 0; // ?? 0 to keep ts happy
+                }
+                if (!directed) { // ie symmetric => copy to lower-left half
+                    matrix[column][row] = matrix[row][column];
+                }
+            }
+        }
+    }
     const params = {
         nodes,
         density,
@@ -156,7 +172,7 @@ export function random(c: Context, queryParams: Record<string, string>) {
     const fullJson = {
         "metadata": {
             params,
-            "edges": directed ? edges : edges / 2,
+            "edges": directed ? edge_count : edge_count / 2,
             message: `Graph generated with ${density}% density`,
             understood_params,
         },
