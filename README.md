@@ -7,7 +7,7 @@ It's also deployed on <https://grafg1.spengergasse.at/graphsupply>,
 for convenience.
 For playing around, refer to [endpoints.rest](./endpoints.rest)
 
-## Explanation for random
+## Explanation for random checkboxes
 
 - nodes: desired node count
 - density: (in %) likelyhood of each edge to exist
