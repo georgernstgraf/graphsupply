@@ -14,3 +14,9 @@ For playing around, refer to [endpoints.rest](./endpoints.rest)
 - weighted: (bool / default: false) add positive weights to each edge
 - directed: (bool / default: false) be symmetric on main diagonal
 - loops: (bool / default: false) allow loops
+
+## Tech Stack
+
+- deno (ts runtime)
+- hono (webapp framework)
+- cytoscape.js (in the frontend)
